@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class Tile : MonoBehaviour {
+﻿public class Tile {
     public enum State {
         InvalidState = 0,
         Static,
