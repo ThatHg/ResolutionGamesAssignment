@@ -13,15 +13,10 @@
         Tile03,
     };
 
-    public Type type;
+    public Type type { get; set; }
+    public State currentState { get; set; }
 
-    public State currentState { get; private set; }
+    public Tile(){ 
 
-    private void Start() {
-    
-    }
-
-    private void Update() {
-    
     }
 }
