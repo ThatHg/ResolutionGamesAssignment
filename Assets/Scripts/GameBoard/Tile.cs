@@ -7,7 +7,17 @@ public class Tile : MonoBehaviour {
         Moving,
     };
 
-    public State CurrentState { get; private set; }
+    public enum Type {
+        InvalidType = 0,
+        Tile00,
+        Tile01,
+        Tile02,
+        Tile03,
+    };
+
+    public Type type;
+
+    public State currentState { get; private set; }
 
     private void Start() {
     
