@@ -55,4 +55,8 @@ public class TileController : MonoBehaviour {
 
         return resolvedMovement;
     }
+
+    public void Remove() {
+        Destroy(this);
+    }
 }
