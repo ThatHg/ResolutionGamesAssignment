@@ -25,7 +25,6 @@ public class Board : MonoBehaviour {
         PopulateBoard();
 
         if(floorObject == null) {
-            // Placement of floor were all tiles are going to rest on
             try
             {
                 floorObject = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
@@ -38,6 +37,8 @@ public class Board : MonoBehaviour {
 
         var floorCollider = floorObject.GetComponent<Collider>();
         Debug.Assert(floorCollider != null, "Error, Board.cs - Could not find Collider on Floor object");
+
+        // Placement of floor were all tiles are going to rest on
         var offset = floorCollider.bounds.extents + backgroundRenderer.bounds.extents;
         offset.x = 0;
         offset.z = 0;

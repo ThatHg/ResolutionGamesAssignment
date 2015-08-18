@@ -35,7 +35,7 @@ public class TileController : MonoBehaviour {
         var resolvedMovement = -Vector3.up * deltaSpeed;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + tileCollider.bounds.extents.y)){
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + tileCollider.bounds.extents.y)) {
             state = State.Static;
             var y0 = transform.position.y;
             var y1 = hit.collider.transform.position.y;

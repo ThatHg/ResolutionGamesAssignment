@@ -6,15 +6,17 @@ public class ButtonController : MonoBehaviour {
     public GameObject game;
 
     public void ButtonPressed() {
-        int width;
-        int height;
-        int.TryParse(widthField.text, out width);
-        int.TryParse(heightField.text, out height);
-
         var board = game.GetComponent<Board>();
         Debug.Assert(board != null, "Error, ButtonController.cs - Could not find board component on gameobject");
-        board.SetWidth(width);
-        board.SetHeight(height);
+
+        int width;
+        int height;
+        if(int.TryParse(widthField.text, out width)) {
+            board.SetWidth(width);
+        }
+        if(int.TryParse(heightField.text, out height)) {
+            board.SetHeight(height);
+        }
         board.ReBuildBoard();
     }
 }
