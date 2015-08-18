@@ -8,10 +8,13 @@ public class Board : MonoBehaviour {
     public GameObject floor;
 
     private Renderer backgroundRenderer;
-    private Dictionary<int, TileController> tileControllers;
+    private Dictionary<int, TileController> tileControllers = new Dictionary<int, TileController>();
 
     private void Start () {
-        tileControllers = new Dictionary<int, TileController>();
+        Initialize();
+    }
+
+    private void Initialize() {
         var backgroundGo = GameObject.FindWithTag("Background");
         Debug.Assert(backgroundGo != null, "Error, Board.cs - Could not find object tagged with Background");
         backgroundRenderer = backgroundGo.GetComponent<Renderer>();
@@ -19,7 +22,8 @@ public class Board : MonoBehaviour {
         backgroundRenderer.transform.localScale = new Vector3(width, height, 1);
 
         // Placement of floor were all tiles are going to rest on
-        try {
+        try
+        {
             var floorGo = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
             var floorCollider = floorGo.GetComponent<Collider>();
             Debug.Assert(floorCollider != null, "Error, Board.cs - Could not find Collider on Floor object");
@@ -29,7 +33,8 @@ public class Board : MonoBehaviour {
             floorGo.transform.position -= offset;
             floorGo.transform.localScale = new Vector3(width, 1, 1);
         }
-        catch(System.InvalidCastException) {
+        catch (System.InvalidCastException)
+        {
             Debug.LogError("Error, Board.cs - Could not instantiate Floor GameObject");
         }
 
@@ -137,7 +142,7 @@ public class Board : MonoBehaviour {
     private bool IsBoardStatic() {
         var isStatic = true;
         foreach(KeyValuePair<int, TileController> entry in tileControllers) {
-            if(entry.Value.state == Tile.State.Moving) {
+            if(entry.Value.state == TileController.State.Moving) {
                 isStatic = false;
                 break;
             }
