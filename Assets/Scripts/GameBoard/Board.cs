@@ -25,12 +25,10 @@ public class Board : MonoBehaviour {
         PopulateBoard();
 
         if(floorObject == null) {
-            try
-            {
+            try {
                 floorObject = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
             }
-            catch (System.InvalidCastException)
-            {
+            catch (System.InvalidCastException) {
                 Debug.LogError("Error, Board.cs - Could not instantiate Floor GameObject");
             }
         }
