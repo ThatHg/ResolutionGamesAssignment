@@ -42,6 +42,7 @@ public class Board : MonoBehaviour {
 
     private void Update () {
         if(IsBoardStatic()) {
+            HandleMouse();
             CheckBoard();
         }
     }
@@ -49,6 +50,18 @@ public class Board : MonoBehaviour {
     private void CheckBoard() {
         for (var y = 0; y < height; ++y) {
             RemoveMatchedRow(y);
+        }
+    }
+
+    private void HandleMouse() {
+        if(Input.GetButtonDown("Fire1")) {
+            RaycastHit hit;
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if(Physics.Raycast(ray, out hit, 20f)) {
+                if(hit.collider.tag == "Tile") {
+                    RemoveTile(hit.collider.gameObject);
+                }
+            }
         }
     }
 
@@ -78,15 +91,9 @@ public class Board : MonoBehaviour {
             tileList.Clear();
         }
 
-        while (tileList.Count > 0)
-        {
-            var removeTile = tileList[0];
-
-            var tileController = removeTile.GetComponent<TileController>();
-            Debug.Assert(tileController != null, "Error, Board.cs - Could not find TileController on tile");
-            tileControllers.Remove(tileController.Id);
+        while (tileList.Count > 0) {
+            RemoveTile(tileList[0]);
             tileList.RemoveAt(0);
-            Destroy(removeTile);
         }
     }
 
@@ -115,6 +122,13 @@ public class Board : MonoBehaviour {
         catch (System.InvalidCastException) {
             Debug.LogError("Error, Board.cs - Could not instantiate Tile GameObject");
         }
+    }
+
+    private void RemoveTile(GameObject tileObj){
+        var tileController = tileObj.GetComponent<TileController>();
+        Debug.Assert(tileController != null, "Error, Board.cs - Could not find TileController on tile");
+        tileControllers.Remove(tileController.Id);
+        Destroy(tileObj);
     }
 
     private GameObject GetTileAt(float x, float y) {
