@@ -14,8 +14,10 @@ public class TileController : MonoBehaviour {
     public int Id { get; private set; }
     public float speed;
     private Collider tileCollider;
+    private float velocity;
 
     private void Awake () {
+        velocity = 0;
         tileCollider = GetComponent<Collider>();
         Debug.Assert(tileCollider != null, "Error, TileController.cs - Could not find collider on " + gameObject.name);
         Id = System.Threading.Interlocked.Increment(ref ID);
@@ -27,8 +29,8 @@ public class TileController : MonoBehaviour {
 
     private void Move() {
         state = State.Moving;
-        var deltaSpeed = speed * Time.deltaTime;
-        transform.position += ResolvMovement(deltaSpeed);
+        velocity += speed * Time.deltaTime;
+        transform.position += ResolvMovement(velocity);
     }
 
     private Vector3 ResolvMovement(float deltaSpeed) {
@@ -42,6 +44,7 @@ public class TileController : MonoBehaviour {
             var length = y0 - y1;
             var travelDistance = length - (tileCollider.bounds.extents.y + hit.collider.bounds.extents.y);
             resolvedMovement = -Vector3.up * travelDistance;
+            velocity = 0;
         }
         return resolvedMovement;
     }

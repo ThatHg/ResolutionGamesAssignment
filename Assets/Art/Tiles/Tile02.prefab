@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268a87d710fb72f4a834fe042f57fb39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: .74000001
 --- !u!136 &13689216
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -104,7 +104,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: a220574fea7e141fbb87209275a035c2, type: 2}
     - target: {fileID: 0}
       propertyPath: speed
-      value: 3
+      value: .74000001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
