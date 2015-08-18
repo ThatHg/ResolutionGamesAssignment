@@ -13,12 +13,12 @@ public class TileController : MonoBehaviour {
     public float speed;
 
     private Tile tile;
-    private Renderer tileRenderer;
+    private Collider tileCollider;
 
     private void Start () {
         tile = new Tile();
-        tileRenderer = GetComponent<Renderer>();
-        Debug.Assert(tileRenderer != null, "Error, TileController.cs - Could not find renderer on " + gameObject.name);
+        tileCollider = GetComponent<Collider>();
+        Debug.Assert(tileCollider != null, "Error, TileController.cs - Could not find collider on " + gameObject.name);
     }
 
     private void Update () {
@@ -37,18 +37,15 @@ public class TileController : MonoBehaviour {
         var resolvedMovement = -Vector3.up * deltaSpeed;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + tileRenderer.bounds.extents.y))
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + tileCollider.bounds.extents.y))
         {
             state = Tile.State.Static;
-
-            var collidedRenderer = hit.collider.GetComponent<Renderer>();
-            Debug.Assert(collidedRenderer != null, "Error, TileController.cs - Could not find renderer on " + hit.collider.name);
-
+            
             var y0 = transform.position.y;
             var y1 = hit.collider.transform.position.y;
 
             var length = y0 - y1;
-            var travelDistance = length - (tileRenderer.bounds.extents.y + collidedRenderer.bounds.extents.y);
+            var travelDistance = length - (tileCollider.bounds.extents.y + hit.collider.bounds.extents.y);
 
             resolvedMovement = -Vector3.up * travelDistance;
         }
