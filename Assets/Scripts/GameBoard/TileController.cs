@@ -14,12 +14,12 @@ public class TileController : MonoBehaviour {
     public float speed;
 
     private Tile tile;
-    private Renderer renderer;
+    private Renderer tileRenderer;
 
     private void Start () {
         tile = new Tile();
-        renderer = GetComponent<Renderer>();
-        Debug.Assert(renderer != null, "Error, TileController.cs - Could not find renderer on " + gameObject.name);
+        tileRenderer = GetComponent<Renderer>();
+        Debug.Assert(tileRenderer != null, "Error, TileController.cs - Could not find renderer on " + gameObject.name);
     }
 
     private void Update () {
@@ -31,30 +31,29 @@ public class TileController : MonoBehaviour {
 
         var deltaSpeed = speed * Time.deltaTime;
 
-        var movement = -Vector3.up * deltaSpeed;
+        transform.position += ResolvMovement(deltaSpeed);
+    }
 
-        var layer = gameObject.layer;
-        gameObject.layer = 2; // Set this gameObjects layer to IgnoreRaycast.
+    private Vector3 ResolvMovement(float deltaSpeed) {
+        var resolvedMovement = -Vector3.up * deltaSpeed;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + renderer.bounds.extents.y)) {
-            Debug.DrawRay(transform.position, movement);
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + tileRenderer.bounds.extents.y))
+        {
             state = Tile.State.Static;
 
-            var renderer1 = hit.collider.GetComponent<Renderer>();
-            Debug.Assert(renderer1 != null, "Error, TileController.cs - Could not find renderer on " + hit.collider.name);
+            var collidedRenderer = hit.collider.GetComponent<Renderer>();
+            Debug.Assert(collidedRenderer != null, "Error, TileController.cs - Could not find renderer on " + hit.collider.name);
 
             var y0 = transform.position.y;
             var y1 = hit.collider.transform.position.y;
 
             var length = y0 - y1;
-            var travelDistance = length - (renderer.bounds.extents.y + renderer1.bounds.extents.y);
+            var travelDistance = length - (tileRenderer.bounds.extents.y + collidedRenderer.bounds.extents.y);
 
-            movement.y -= travelDistance;
+            resolvedMovement = -Vector3.up * travelDistance;
         }
 
-        transform.position += movement;
-
-        gameObject.layer = layer; // Set this gameObjects layer to its default layer.
+        return resolvedMovement;
     }
 }
