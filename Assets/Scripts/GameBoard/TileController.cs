@@ -2,8 +2,7 @@
 
 public class TileController : MonoBehaviour {
     private static int ID = 0;
-    public enum State
-    {
+    public enum State {
         InvalidState = 0,
         Static,
         Moving,
