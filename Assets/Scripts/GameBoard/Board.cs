@@ -57,7 +57,7 @@ public class Board : MonoBehaviour {
         if(Input.GetButtonDown("Fire1")) {
             RaycastHit hit;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out hit, 20f)) {
+            if(Physics.Raycast(ray, out hit)) {
                 if(hit.collider.tag == "Tile") {
                     RemoveTile(hit.collider.gameObject);
                 }
