@@ -11,10 +11,10 @@ GameObject:
   - 33: {fileID: 3335086}
   - 65: {fileID: 6571424}
   - 23: {fileID: 2357970}
-  - 114: {fileID: 11429328}
+  - 114: {fileID: 11484646}
   m_Layer: 0
   m_Name: Tile00
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,7 +74,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11429328
+--- !u!114 &11484646
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268a87d710fb72f4a834fe042f57fb39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: .5
+  speed: 3
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -95,7 +95,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_TagString
-      value: Untagged
+      value: Tile
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Materials.Array.data[0]
@@ -103,7 +103,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 0836fe18e4290401db2472f19e041b40, type: 2}
     - target: {fileID: 0}
       propertyPath: speed
-      value: .5
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
