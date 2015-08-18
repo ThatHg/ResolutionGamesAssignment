@@ -7,7 +7,7 @@ public class Board : MonoBehaviour {
     public GameObject[] tiles;
     public GameObject floor;
 
-    private Transform background;
+    private Renderer backgroundRenderer;
     private List<TileController> tileControllers;
 
     private void Start () {
@@ -15,18 +15,14 @@ public class Board : MonoBehaviour {
 
         var backgroundGo = GameObject.FindWithTag("Background");
         Debug.Assert(backgroundGo != null, "Error, Board.cs - Could not find object tagged with Background");
-        background = backgroundGo.transform;
-        var scale = background.localScale;
-        scale.x = width;
-        scale.y = height;
-        background.localScale = scale;
+        backgroundRenderer = backgroundGo.GetComponent<Renderer>();
+        Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background");
+        backgroundRenderer.transform.localScale = new Vector3(width, height, 1);
 
         try {
             var floorGo = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
             var floorCollider = floorGo.GetComponent<Collider>();
             Debug.Assert(floorCollider != null, "Error, Board.cs - Could not find Collider on Floor object");
-            var backgroundRenderer = background.GetComponent<Renderer>();
-            Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background object");
             var offset = floorCollider.bounds.extents + backgroundRenderer.bounds.extents;
             offset.x = 0;
             offset.z = 0;
@@ -74,22 +70,20 @@ public class Board : MonoBehaviour {
                 availableIndices.Remove(lastIndex);
                 sameIndexCounter = 0;
             }
-            var backgroundRenderer = background.GetComponent<Renderer>();
-            Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background object");
-            var offset = Vector3.one * 0.5f - backgroundRenderer.bounds.extents;
-            
-            AddTile(new Vector3(x,y,0) + offset, tiles[index]);
 
-            // Add the removedIndex to the availableIndices list when a diffirent index has been used
+            // Add the removedIndex to the availableIndices list when an index diffirent from removeIndex has been used
             if (removedIndex != -1 && removedIndex != lastIndex && availableIndices.Contains(removedIndex) == false) {
                 availableIndices.Add(removedIndex);
             }
+
+            var offset = Vector3.one * 0.5f - backgroundRenderer.bounds.extents;
+            AddTile(new Vector3(x, y, 0) + offset, tiles[index]);
         }
     }
     
-    private void AddTile(Vector3 position, GameObject obj) {
+    private void AddTile(Vector3 position, GameObject tileObject) {
         try {
-            var tile = (GameObject)Instantiate(obj, position, Quaternion.identity);
+            var tile = (GameObject)Instantiate(tileObject, position, Quaternion.identity);
             var tileController = tile.GetComponent<TileController>();
             Debug.Assert(tileController != null, "Error, Board.cs - Could not find TileController on tile");
             tileControllers.Add(tileController);
