@@ -9,6 +9,7 @@ public class Board : MonoBehaviour {
 
     private Renderer backgroundRenderer;
     private Dictionary<int, TileController> tileControllers = new Dictionary<int, TileController>();
+    private GameObject floorObject;
 
     private void Start () {
         Initialize();
@@ -21,24 +22,27 @@ public class Board : MonoBehaviour {
         Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background");
         backgroundRenderer.transform.localScale = new Vector3(width, height, 1);
 
-        // Placement of floor were all tiles are going to rest on
-        try
-        {
-            var floorGo = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
-            var floorCollider = floorGo.GetComponent<Collider>();
-            Debug.Assert(floorCollider != null, "Error, Board.cs - Could not find Collider on Floor object");
-            var offset = floorCollider.bounds.extents + backgroundRenderer.bounds.extents;
-            offset.x = 0;
-            offset.z = 0;
-            floorGo.transform.position -= offset;
-            floorGo.transform.localScale = new Vector3(width, 1, 1);
-        }
-        catch (System.InvalidCastException)
-        {
-            Debug.LogError("Error, Board.cs - Could not instantiate Floor GameObject");
+        PopulateBoard();
+
+        if(floorObject == null) {
+            // Placement of floor were all tiles are going to rest on
+            try
+            {
+                floorObject = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
+            }
+            catch (System.InvalidCastException)
+            {
+                Debug.LogError("Error, Board.cs - Could not instantiate Floor GameObject");
+            }
         }
 
-        PopulateBoard();
+        var floorCollider = floorObject.GetComponent<Collider>();
+        Debug.Assert(floorCollider != null, "Error, Board.cs - Could not find Collider on Floor object");
+        var offset = floorCollider.bounds.extents + backgroundRenderer.bounds.extents;
+        offset.x = 0;
+        offset.z = 0;
+        floorObject.transform.position = -offset;
+        floorObject.transform.localScale = new Vector3(width, 1, 1);
     }
 
     private void Update () {
@@ -148,5 +152,21 @@ public class Board : MonoBehaviour {
             }
         }
         return isStatic;
+    }
+
+    public void ReBuildBoard() {
+        foreach (KeyValuePair<int, TileController> entry in tileControllers) {
+            Destroy(entry.Value.gameObject);
+        }
+        tileControllers.Clear();
+        Initialize();
+    }
+
+    public void SetWidth(int boardWidth) {
+        width = boardWidth;
+    }
+
+    public void SetHeight(int boardHeight) {
+        height = boardHeight;
     }
 }
