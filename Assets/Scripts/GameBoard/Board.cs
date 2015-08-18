@@ -8,10 +8,11 @@ public class Board : MonoBehaviour {
     public GameObject floor;
 
     private Renderer backgroundRenderer;
-    private List<TileController> tileControllers;
+    private Dictionary<int, TileController> tileControllers;
+    private GameObject tilesParent;
 
     private void Start () {
-        tileControllers = new List<TileController>();
+        tileControllers = new Dictionary<int, TileController>();
 
         var backgroundGo = GameObject.FindWithTag("Background");
         Debug.Assert(backgroundGo != null, "Error, Board.cs - Could not find object tagged with Background");
@@ -33,15 +34,60 @@ public class Board : MonoBehaviour {
             Debug.LogError("Error, Board.cs - Could not instantiate Floor GameObject");
         }
 
+        tilesParent = new GameObject("Tiles");
+        tilesParent.transform.parent = transform;
+
         PopulateBoard();
     }
 
     private void Update () {
-    
+        if(IsBoardStatic()) {
+            CheckBoard();
+        }
     }
 
-    private void CheckRow() {
+    private void CheckBoard() {
+        for (var y = 0; y < height; ++y) {
+            RemoveMatchedRow(y);
+        }
+    }
 
+    private void RemoveMatchedRow(float y) {
+        var offset = Vector3.one * 0.5f - backgroundRenderer.bounds.extents;
+        var tiles = new List<GameObject>();
+        var lastName = "";
+        for (var x = 0; x < width; ++x) {
+            var tile = GetTileAt(x + offset.x, y + offset.y);
+            if(tile == null) {
+                RemoveMatched(ref tiles, 3);
+                continue;
+            }
+            
+            if (tile.name != lastName) {
+                RemoveMatched(ref tiles, 3);
+            }
+            lastName = tile.name;
+            tiles.Add(tile);
+        }
+
+        RemoveMatched(ref tiles, 3);
+    }
+
+    private void RemoveMatched(ref List<GameObject> tileList, int matchedRowLength) {
+        if(tileList.Count < matchedRowLength) {
+            tileList.Clear();
+        }
+
+        while (tileList.Count > 0)
+        {
+            var removeTile = tileList[0];
+
+            var tileController = removeTile.GetComponent<TileController>();
+            Debug.Assert(tileController != null, "Error, Board.cs - Could not find TileController on tile");
+            tileControllers.Remove(tileController.Id);
+            tileList.RemoveAt(0);
+            Destroy(removeTile);
+        }
     }
 
     private void PopulateBoard() {
@@ -61,12 +107,33 @@ public class Board : MonoBehaviour {
     private void AddTile(Vector3 position, GameObject tileObject) {
         try {
             var tile = (GameObject)Instantiate(tileObject, position, Quaternion.identity);
+            tile.transform.parent = tilesParent.transform;
             var tileController = tile.GetComponent<TileController>();
             Debug.Assert(tileController != null, "Error, Board.cs - Could not find TileController on tile");
-            tileControllers.Add(tileController);
+            tileControllers.Add(tileController.Id, tileController);
         }
         catch (System.InvalidCastException) {
             Debug.LogError("Error, Board.cs - Could not instantiate Tile GameObject");
         }
+    }
+
+    private GameObject GetTileAt(float x, float y) {
+        var position = new Vector3(x,y,-10);
+        RaycastHit hit;
+        if (Physics.Raycast(position, Vector3.forward, out hit, 100)) {
+            return hit.collider.gameObject;
+        }
+        return null;
+    }
+
+    private bool IsBoardStatic() {
+        var isStatic = true;
+        foreach(KeyValuePair<int, TileController> entry in tileControllers) {
+            if(entry.Value.state == Tile.State.Moving) {
+                isStatic = false;
+                break;
+            }
+        }
+        return isStatic;
     }
 }
