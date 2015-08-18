@@ -9,17 +9,16 @@ public class Board : MonoBehaviour {
 
     private Renderer backgroundRenderer;
     private Dictionary<int, TileController> tileControllers;
-    private GameObject tilesParent;
 
     private void Start () {
         tileControllers = new Dictionary<int, TileController>();
-
         var backgroundGo = GameObject.FindWithTag("Background");
         Debug.Assert(backgroundGo != null, "Error, Board.cs - Could not find object tagged with Background");
         backgroundRenderer = backgroundGo.GetComponent<Renderer>();
         Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background");
         backgroundRenderer.transform.localScale = new Vector3(width, height, 1);
 
+        // Placement of floor were all tiles are going to rest on
         try {
             var floorGo = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
             var floorCollider = floorGo.GetComponent<Collider>();
@@ -33,9 +32,6 @@ public class Board : MonoBehaviour {
         catch(System.InvalidCastException) {
             Debug.LogError("Error, Board.cs - Could not instantiate Floor GameObject");
         }
-
-        tilesParent = new GameObject("Tiles");
-        tilesParent.transform.parent = transform;
 
         PopulateBoard();
     }
@@ -75,14 +71,12 @@ public class Board : MonoBehaviour {
                 RemoveMatched(ref tiles, 3);
                 continue;
             }
-            
             if (tile.name != lastName) {
                 RemoveMatched(ref tiles, 3);
             }
             lastName = tile.name;
             tiles.Add(tile);
         }
-
         RemoveMatched(ref tiles, 3);
     }
 
@@ -114,7 +108,7 @@ public class Board : MonoBehaviour {
     private void AddTile(Vector3 position, GameObject tileObject) {
         try {
             var tile = (GameObject)Instantiate(tileObject, position, Quaternion.identity);
-            tile.transform.parent = tilesParent.transform;
+            tile.transform.parent = transform;
             var tileController = tile.GetComponent<TileController>();
             Debug.Assert(tileController != null, "Error, Board.cs - Could not find TileController on tile");
             tileControllers.Add(tileController.Id, tileController);

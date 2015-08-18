@@ -11,12 +11,10 @@ public class ControlledRandom {
     public ControlledRandom(int highestIndex, int maxRepetition) {
         Debug.Assert(highestIndex >= 1, "You must set HighestIndex to a value greater than 0");
         Debug.Assert(maxRepetition >= 1, "You must set MaxRepetition to a value greater than 0");
-
         availableIndices = new List<int>();
         for (var i = 0; i <= highestIndex; ++i) {
             availableIndices.Add(i);
         }
-
         repetitions = maxRepetition;
     }
 
@@ -27,7 +25,6 @@ public class ControlledRandom {
         }
 
         lastIndex = index;
-
         // Always be sure to only instantiate two of the same object in a row
         // by set aside indices that has occured twice
         if (sameIndexCounter == repetitions) {
@@ -40,7 +37,6 @@ public class ControlledRandom {
         if (removedIndex != -1 && removedIndex != lastIndex && availableIndices.Contains(removedIndex) == false) {
             availableIndices.Add(removedIndex);
         }
-
         return index;
     }
 }
