@@ -8,8 +8,11 @@ public class Board : MonoBehaviour {
     public GameObject floor;
 
     private Transform background;
+    private List<TileController> tileControllers;
 
     private void Start () {
+        tileControllers = new List<TileController>();
+
         var backgroundGo = GameObject.FindWithTag("Background");
         Debug.Assert(backgroundGo != null, "Error, Board.cs - Could not find object tagged with Background");
         background = backgroundGo.transform;
@@ -71,24 +74,28 @@ public class Board : MonoBehaviour {
                 availableIndices.Remove(lastIndex);
                 sameIndexCounter = 0;
             }
+            var backgroundRenderer = background.GetComponent<Renderer>();
+            Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background object");
+            var offset = Vector3.one * 0.5f - backgroundRenderer.bounds.extents;
             
-            try {
-                var tile = (GameObject)Instantiate(tiles[index], new Vector3(x, y, 0), Quaternion.identity);
-                var tileCollider = tile.GetComponent<Collider>();
-                Debug.Assert(tileCollider != null, "Error, Board.cs - Could not find Collider on Tile object");
-                var backgroundRenderer = background.GetComponent<Renderer>();
-                Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background object");
-                var offset = tileCollider.bounds.extents - backgroundRenderer.bounds.extents;
-                tile.transform.position += offset;
-            }
-            catch(System.InvalidCastException) {
-                Debug.LogError("Error, Board.cs - Could not instantiate Tile GameObject");
-            }
+            AddTile(new Vector3(x,y,0) + offset, tiles[index]);
 
             // Add the removedIndex to the availableIndices list when a diffirent index has been used
             if (removedIndex != -1 && removedIndex != lastIndex && availableIndices.Contains(removedIndex) == false) {
                 availableIndices.Add(removedIndex);
             }
+        }
+    }
+    
+    private void AddTile(Vector3 position, GameObject obj) {
+        try {
+            var tile = (GameObject)Instantiate(obj, position, Quaternion.identity);
+            var tileController = tile.GetComponent<TileController>();
+            Debug.Assert(tileController != null, "Error, Board.cs - Could not find TileController on tile");
+            tileControllers.Add(tileController);
+        }
+        catch (System.InvalidCastException) {
+            Debug.LogError("Error, Board.cs - Could not instantiate Tile GameObject");
         }
     }
 }
