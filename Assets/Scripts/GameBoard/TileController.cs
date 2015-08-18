@@ -57,12 +57,4 @@ public class TileController : MonoBehaviour {
 
         gameObject.layer = layer; // Set this gameObjects layer to its default layer.
     }
-
-    private void OnCollsionExit() {
-        state = Tile.State.Moving;
-    }
-
-    private void OnCollisionStay() {
-        state = Tile.State.Static;
-    }
 }
