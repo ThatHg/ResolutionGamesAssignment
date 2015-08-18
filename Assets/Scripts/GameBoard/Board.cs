@@ -38,10 +38,8 @@ public class Board : MonoBehaviour {
         var floorCollider = floorObject.GetComponent<Collider>();
         Debug.Assert(floorCollider != null, "Error, Board.cs - Could not find Collider on Floor object");
 
-        // Placement of floor were all tiles are going to rest on
-        var offset = floorCollider.bounds.extents + backgroundRenderer.bounds.extents;
-        offset.x = 0;
-        offset.z = 0;
+        // Place the floor at the bottom edge of the background
+        var offset = Vector3.up * (floorCollider.bounds.extents.y + backgroundRenderer.bounds.extents.y);
         floorObject.transform.position = -offset;
         floorObject.transform.localScale = new Vector3(width, 1, 1);
     }

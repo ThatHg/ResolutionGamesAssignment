@@ -192,7 +192,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: d00b78f159b7ea24bbd6843e6a6e4660, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -508,7 +508,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -1010,7 +1010,6 @@ GameObject:
   - 223: {fileID: 1654002461}
   - 114: {fileID: 1654002460}
   - 114: {fileID: 1654002459}
-  - 114: {fileID: 1654002462}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1093,20 +1092,6 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!114 &1654002462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1654002457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11dc0faf9c7ccf8419ef57a9e5e57b30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  widthField: {fileID: 0}
-  heightField: {fileID: 0}
-  game: {fileID: 0}
 --- !u!1 &1671348927
 GameObject:
   m_ObjectHideFlags: 0
