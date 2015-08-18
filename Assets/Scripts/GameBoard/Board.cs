@@ -40,6 +40,10 @@ public class Board : MonoBehaviour {
     
     }
 
+    private void CheckRow() {
+
+    }
+
     private void PopulateBoard() {
         for(int y = 0; y < height; ++y) {
             GenerateRow(y);
@@ -47,37 +51,10 @@ public class Board : MonoBehaviour {
     }
 
     private void GenerateRow(float y) {
-        var availableIndices = new List<int>();
-        for(var i = 0; i < tiles.Length; ++i) {
-            availableIndices.Add(i);
-        }
-
-        var lastIndex = -1;
-        var removedIndex = -1;
-        var sameIndexCounter = 0;
+        var controllerRandom = new ControlledRandom(tiles.Length-1, 1);
         for(var x = 0; x < width; ++x) {
-            var index = availableIndices[Random.Range(0, availableIndices.Count - 1)];
-            if(index == lastIndex) {
-                sameIndexCounter++;
-            }
-
-            lastIndex = index;
-
-            // Always be sure to only instantiate two of the same object in a row
-            // by set aside indices that has occured twice
-            if (sameIndexCounter == 1) {
-                removedIndex = lastIndex;
-                availableIndices.Remove(lastIndex);
-                sameIndexCounter = 0;
-            }
-
-            // Add the removedIndex to the availableIndices list when an index diffirent from removeIndex has been used
-            if (removedIndex != -1 && removedIndex != lastIndex && availableIndices.Contains(removedIndex) == false) {
-                availableIndices.Add(removedIndex);
-            }
-
             var offset = Vector3.one * 0.5f - backgroundRenderer.bounds.extents;
-            AddTile(new Vector3(x, y, 0) + offset, tiles[index]);
+            AddTile(new Vector3(x, y, 0) + offset, tiles[controllerRandom.NextIndex()]);
         }
     }
     
