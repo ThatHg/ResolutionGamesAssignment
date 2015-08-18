@@ -1,24 +1,22 @@
 ﻿using UnityEngine;
 
 public class TileController : MonoBehaviour {
+    private static int ID = 0;
     public Tile.State state {
         get { return tile.currentState; }
         set { tile.currentState = value; }
     }
-    public Tile.Type type {
-        get { return tile.type; }
-        set { tile.type = value; }
-    }
-
+    public int Id { get; private set; }
     public float speed;
-
     private Tile tile;
     private Collider tileCollider;
 
-    private void Start () {
+    private void Awake () {
         tile = new Tile();
         tileCollider = GetComponent<Collider>();
         Debug.Assert(tileCollider != null, "Error, TileController.cs - Could not find collider on " + gameObject.name);
+
+        Id = System.Threading.Interlocked.Increment(ref ID);
     }
 
     private void Update () {
@@ -37,8 +35,7 @@ public class TileController : MonoBehaviour {
         var resolvedMovement = -Vector3.up * deltaSpeed;
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + tileCollider.bounds.extents.y))
-        {
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, deltaSpeed + tileCollider.bounds.extents.y)){
             state = Tile.State.Static;
             
             var y0 = transform.position.y;
