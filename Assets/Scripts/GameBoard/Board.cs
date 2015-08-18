@@ -5,6 +5,7 @@ public class Board : MonoBehaviour {
     public int width;
     public int height;
     public GameObject[] tiles;
+    public GameObject floor;
 
     private Transform background;
 
@@ -16,6 +17,22 @@ public class Board : MonoBehaviour {
         scale.x = width;
         scale.y = height;
         background.localScale = scale;
+
+        try {
+            var floorGo = (GameObject)Instantiate(floor, Vector3.zero, Quaternion.identity);
+            var floorCollider = floorGo.GetComponent<Collider>();
+            Debug.Assert(floorCollider != null, "Error, Board.cs - Could not find Collider on Floor object");
+            var backgroundRenderer = background.GetComponent<Renderer>();
+            Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background object");
+            var offset = floorCollider.bounds.extents + backgroundRenderer.bounds.extents;
+            offset.x = 0;
+            offset.z = 0;
+            floorGo.transform.position -= offset;
+            floorGo.transform.localScale = new Vector3(width, 1, 1);
+        }
+        catch(System.InvalidCastException) {
+            Debug.LogError("Error, Board.cs - Could not instantiate Floor GameObject");
+        }
 
         PopulateBoard();
     }
@@ -57,11 +74,11 @@ public class Board : MonoBehaviour {
             
             try {
                 var tile = (GameObject)Instantiate(tiles[index], new Vector3(x, y, 0), Quaternion.identity);
-                var tileRenderer = tile.GetComponent<Renderer>();
-                Debug.Assert(tileRenderer != null, "Error, Board.cs - Could not find Renderer on Tile object");
+                var tileCollider = tile.GetComponent<Collider>();
+                Debug.Assert(tileCollider != null, "Error, Board.cs - Could not find Collider on Tile object");
                 var backgroundRenderer = background.GetComponent<Renderer>();
-                Debug.Assert(tileRenderer != null, "Error, Board.cs - Could not find Renderer on Background object");
-                var offset = tileRenderer.bounds.extents - backgroundRenderer.bounds.extents;
+                Debug.Assert(backgroundRenderer != null, "Error, Board.cs - Could not find Renderer on Background object");
+                var offset = tileCollider.bounds.extents - backgroundRenderer.bounds.extents;
                 tile.transform.position += offset;
             }
             catch(System.InvalidCastException) {
