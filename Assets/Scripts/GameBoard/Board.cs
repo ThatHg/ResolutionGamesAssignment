@@ -67,6 +67,12 @@ public class Board : MonoBehaviour {
         }
     }
 
+    private void ShakeScreen() {
+        var shake = Camera.main.GetComponent<ScreenShake>();
+        Debug.Assert(shake != null,"Error, Board.cs - There are no ScreenShake component on camera");
+        shake.AddShake(0.05f,0.03f);
+    }
+
     private void RemoveMatchedRow(float y) {
         var offset = Vector3.one * 0.5f - backgroundRenderer.bounds.extents;
         var tiles = new List<GameObject>();
@@ -94,12 +100,15 @@ public class Board : MonoBehaviour {
         while (tileList.Count > 0) {
             RemoveTile(tileList[0]);
             tileList.RemoveAt(0);
+            // Whenever we have a matched row, add a screen shake
+            // when it disappear
+            ShakeScreen();
         }
     }
 
     private void PopulateBoard() {
         for(int y = 0; y < height; ++y) {
-            GenerateRow(y);
+            GenerateRow(y + backgroundRenderer.bounds.extents.y * 2);
         }
     }
 

@@ -16,7 +16,7 @@ public class TileController : MonoBehaviour {
     private float velocity;
 
     private void Awake () {
-        velocity = 0;
+        velocity = Random.value;
         tileCollider = GetComponent<Collider>();
         Debug.Assert(tileCollider != null, "Error, TileController.cs - Could not find collider on " + gameObject.name);
         Id = System.Threading.Interlocked.Increment(ref ID);
